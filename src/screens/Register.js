@@ -7,21 +7,20 @@ import {
   CardContent,
   Container,
   FormControl,
-  FormLabel,
   InputLabel,
   Input,
-  TextField,
   Typography,
   IconButton,
-  Grid,
   useMediaQuery,
   Stack,
   InputAdornment
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { useAuth } from "../context/AuthContext";
 function Signup() {
   const navigate = useNavigate();
+  const {token} = useAuth()
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,9 +28,12 @@ function Signup() {
   const [visible, setVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const isMobile = useMediaQuery("(max-width: 600px)"); // Adjust breakpoint as needed
-
+  useEffect(() => {
+    if (token) {
+      navigate("/chats");
+    }
+  }, []);
   const handleRegister = () => {
-    
     console.log("Name:", name, "Email:", email, "Password:", password);
   };
 

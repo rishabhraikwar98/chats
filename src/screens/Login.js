@@ -22,7 +22,7 @@ import {
 } from "@mui/material";
 
 function Login() {
-  const { token } = useAuth();
+  const { token,login } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,6 +36,8 @@ function Login() {
   }, []);
   const handleLogin = () => {
     console.log("Email:", email, "Password:", password);
+    login("12345")
+    navigate("/chats")
   };
 
   const toggleVisible = () => {
