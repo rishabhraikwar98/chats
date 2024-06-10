@@ -1,18 +1,34 @@
-import { Grid } from '@mui/material'
-import React from 'react'
-import MessageList from "../components/MessageList"
-import Messages from "../components/Messages"
-function Chats() {
+import React, { useEffect } from "react";
+import { Grid, Paper } from "@mui/material";
+import ChatList from "../components/ChatList";
+import MessageBox from "../components/MessageBox";
+import { useDispatch} from "react-redux";
+import { resetChats, unselectChat } from "../features/chat/chatSlice";
+const Chats = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    
+    return () => {
+      dispatch(unselectChat());
+      dispatch(resetChats())
+    };
+  }, [dispatch]);
   return (
-    <Grid container gap={3}>
-      <Grid item>
-        <MessageList/>
+    <Grid container gap={2} height="90vh">
+      <Grid item xs={3} component={Paper} elevation={3}>
+        <ChatList />
       </Grid>
-      <Grid item>
-        <Messages/>
+      <Grid
+        item
+        xs={8}
+        component={Paper}
+        elevation={3}
+        sx={{ display: "flex", flexDirection: "column" }}
+      >
+        <MessageBox />
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default Chats
+export default Chats;

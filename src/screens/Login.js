@@ -19,25 +19,38 @@ import {
   Checkbox,
   Grid,
   useMediaQuery,
+  LinearProgress,
 } from "@mui/material";
-
+import { loginService } from "../services/auth";
+import toast from "react-hot-toast";
 function Login() {
-  const { token,login } = useAuth();
+  const { token, login } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
+  const [loading,setLoading ] = useState(false)
   const isMobile = useMediaQuery("(max-width: 600px)"); // Adjust breakpoint as needed
 
   useEffect(() => {
     if (token) {
       navigate("/chats");
     }
-  }, []);
-  const handleLogin = () => {
-    console.log("Email:", email, "Password:", password);
-    login("12345")
-    navigate("/chats")
+  }, [token,navigate]);
+  const handleLogin = async () => {
+    try {
+      setLoading(true);
+      const body = { email, password };
+      const {data} = await loginService(body);
+      login(data.access_token,data.uid);
+      toast.success(data.message)
+      setLoading(false);
+      navigate("/chats");
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }finally{
+      setLoading(false)
+    }
   };
 
   const toggleVisible = () => {
@@ -54,6 +67,7 @@ function Login() {
       }}
     >
       <Box sx={{ width: isMobile ? "100%" : "50%" }}>
+      {loading?<LinearProgress/>:""}
         <Card
           sx={{ borderRadius: 2, px: { xs: 3, sm: 7 }, py: 4, boxShadow: 3 }}
         >
@@ -68,7 +82,7 @@ function Login() {
               <FormControl>
                 <FormLabel sx={{ color: "#555", mb: 1 }}>Email</FormLabel>
                 <TextField
-                required
+                  required
                   autoFocus
                   fullWidth
                   type="email"
@@ -79,7 +93,6 @@ function Login() {
               <FormControl>
                 <FormLabel sx={{ color: "#555", mb: 1 }}>Password</FormLabel>
                 <TextField
-                  autoFocus
                   fullWidth
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -122,6 +135,7 @@ function Login() {
               sx={{ borderRadius: 20, px: { xs: 5, sm: 7 }, py: 1.5, mt: 2 }}
               variant="contained"
               color="success"
+              disabled={loading}
               onClick={handleLogin}
             >
               Login

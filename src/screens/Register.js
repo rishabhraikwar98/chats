@@ -13,14 +13,18 @@ import {
   IconButton,
   useMediaQuery,
   Stack,
-  InputAdornment
+  InputAdornment,
+  LinearProgress,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useAuth } from "../context/AuthContext";
+import { registerService } from "../services/auth";
+import toast from "react-hot-toast";
 function Signup() {
   const navigate = useNavigate();
-  const {token} = useAuth()
+  const [loading, setLoading] = useState(false);
+  const { token, login } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,9 +36,21 @@ function Signup() {
     if (token) {
       navigate("/chats");
     }
-  }, []);
-  const handleRegister = () => {
-    console.log("Name:", name, "Email:", email, "Password:", password);
+  }, [navigate, token]);
+  const handleRegister = async () => {
+    try {
+      setLoading(true);
+      const body = { name, email, password, confirmPassword };
+      const { data } = await registerService(body);
+      login(data.access_token,data.uid);
+      toast.success(data.message);
+      setLoading(false);
+      navigate("/chats");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const toggleVisible = () => {
@@ -55,7 +71,10 @@ function Signup() {
       }}
     >
       <Box sx={{ width: isMobile ? "100%" : "50%" }}>
-        <Card sx={{ borderRadius: 2, px: { xs: 3, sm: 7 }, py: 4, boxShadow: 3 }}>
+        {loading ? <LinearProgress /> : ""}
+        <Card
+          sx={{ borderRadius: 2, px: { xs: 3, sm: 7 }, py: 4, boxShadow: 3 }}
+        >
           <CardContent>
             <Typography
               sx={{ textTransform: "uppercase", fontSize: { xs: 25, sm: 30 } }}
@@ -99,7 +118,9 @@ function Signup() {
                 />
               </FormControl>
               <FormControl>
-                <InputLabel sx={{ color: "#555", mb: 1 }}>Confirm Password</InputLabel>
+                <InputLabel sx={{ color: "#555", mb: 1 }}>
+                  Confirm Password
+                </InputLabel>
                 <Input
                   fullWidth
                   type={confirmPasswordVisible ? "text" : "password"}
@@ -108,7 +129,11 @@ function Signup() {
                   endAdornment={
                     <InputAdornment position="end">
                       <IconButton onClick={toggleConfirmPasswordVisible}>
-                        {confirmPasswordVisible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                        {confirmPasswordVisible ? (
+                          <VisibilityIcon />
+                        ) : (
+                          <VisibilityOffIcon />
+                        )}
                       </IconButton>
                     </InputAdornment>
                   }
@@ -116,18 +141,18 @@ function Signup() {
               </FormControl>
             </Stack>
             <Button
-              sx={{ borderRadius: 20, px: { xs: 5, sm: 7 }, py: 1.5, mt: 3}}
+              sx={{ borderRadius: 20, px: { xs: 5, sm: 7 }, py: 1.5, mt: 3 }}
               variant="contained"
               color="success"
               onClick={handleRegister}
+              disabled={loading}
             >
               Register
             </Button>
           </CardContent>
           <Box display="flex" justifyContent="flex-end">
             <Typography variant="caption">
-              Already have an Account?{" "}
-              <NavLink to="/login">Login</NavLink>
+              Already have an Account? <NavLink to="/login">Login</NavLink>
             </Typography>
           </Box>
         </Card>

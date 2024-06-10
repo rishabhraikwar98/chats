@@ -16,9 +16,11 @@ import Chats from "./screens/Chats";
 import MyFriends from "./screens/MyFriends";
 import Search from "./screens/Search";
 import { CssBaseline } from "@mui/material";
+import { Toaster } from "react-hot-toast";
 function App() {
   return (
     <AuthProvider>
+      <Toaster />
       <CssBaseline />
       <Router>
         <Routes>
