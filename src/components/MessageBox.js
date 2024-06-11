@@ -50,12 +50,12 @@ const MessagesBox = () => {
         dispatch(fetchChatsThunk(token));
       });
       socket.on("user-typing", (data) => {
-        if (data.chat === selectedChat && data.user === selectedUser._id) {
+        if (data.chat === selectedChat && data.from === selectedUser._id) {
           setTypingStatus(true);
         }
       });
       socket.on("user-typing-stopped", (data) => {
-        if (data.chat === selectedChat && data.user === selectedUser._id) {
+        if (data.chat === selectedChat && data.from === selectedUser._id) {
           setTypingStatus(false);
         }
       });
@@ -85,7 +85,7 @@ const MessagesBox = () => {
   };
   const handleTyping = (e) => {
     setMessage(e.target.value);
-    const data = { chat: selectedChat, user: uid };
+    const data = { chat: selectedChat, from: uid,to:selectedUser._id };
     socket.emit("typing", data);
     setTimeout(() => {
       socket.emit("stopped-typing", data);

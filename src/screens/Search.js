@@ -32,6 +32,7 @@ import {
 import { socket } from "../socket";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 const Search = () => {
+  const uid = localStorage.getItem("uid")
   const { token } = useAuth();
   const dispatch = useDispatch();
   const profiles = useSelector((state) => state.search.searchResults);
@@ -64,7 +65,7 @@ const Search = () => {
       await axios.post(BASE_URL + "/api/v1/friends/new_request/" + profileId);
       handleProfileClick(profileId);
       if(socket){
-        socket.emit("friend-request",profileId);
+        socket.emit("friend-request",{to:profileId,from:uid});
       }
     } catch (error) {
       toast.error("Something went wrong!");

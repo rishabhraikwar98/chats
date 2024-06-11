@@ -15,7 +15,7 @@ import { fetchChatsThunk, selectChat } from "../features/chat/chatSlice";
 import { FormatTimeStamp } from "../utils/FormatTimeStamp";
 
 const ChatList = () => {
-  const uid = localStorage.getItem("uid")
+  const uid = localStorage.getItem("uid");
   const { token } = useAuth();
   const dispatch = useDispatch();
   const chats = useSelector((state) => state.activeChats.chats);
@@ -28,6 +28,7 @@ const ChatList = () => {
     dispatch(selectChat(chat));
   };
   const truncateString = (str, maxLength) => {
+    if (!str) return;
     return str.length > maxLength ? str.substring(0, maxLength) + "..." : str;
   };
 
@@ -65,9 +66,20 @@ const ChatList = () => {
               </ListItemAvatar>
               <ListItemText
                 primary={chat.chatDetail.name}
-                secondary={chat.lastMessage?.from==uid?`You: ${truncateString(chat.lastMessage.content,12)}`:truncateString(chat.lastMessage.content,14)}
+                secondary={
+                  chat.lastMessage?.from == uid
+                    ? `You: ${truncateString(chat.lastMessage?.content, 12)}`
+                    : truncateString(chat.lastMessage?.content, 14)
+                }
               />
-              <ListItemText sx={{mr:-2}} secondary={<Typography variant="caption">{FormatTimeStamp(chat.lastMessage?.createdAt)}</Typography>}/>
+              <ListItemText
+                sx={{ mr: -2 }}
+                secondary={
+                  <Typography variant="caption">
+                    {FormatTimeStamp(chat.lastMessage?.createdAt)}
+                  </Typography>
+                }
+              />
             </ListItem>
           ))}
         </List>
