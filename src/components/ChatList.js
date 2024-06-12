@@ -37,7 +37,7 @@ const ChatList = () => {
       <Typography variant="h6" sx={{ p: 2, borderBottom: "1px solid #ccc" }}>
         Chats
       </Typography>
-      {loading && !chats ? (
+      {loading && !chats.length ? (
         <Box
           display="flex"
           justifyContent="center"
