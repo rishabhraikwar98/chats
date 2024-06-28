@@ -40,12 +40,16 @@ function MyProfile() {
   const loading = useSelector(state=>state.activeUser.loading);
 
   useEffect(()=>{
-    axios.defaults.headers.common.Authorization="Bearer " +token
+    axios.defaults.headers.common["Authorization"] ="Bearer " +token
     dispatch(fetchMyProfileThunk(token))
   },[])
   const updateMyProfile = async (body) => {
     try {
-      await axios.patch(BASE_URL + "/api/v1/profile/my_profile", body);
+      await axios.patch(BASE_URL + "/api/v1/profile/my_profile", body,{
+        headers:{
+          "Content-Type":"application/json"
+        }
+      });
     } catch (error) {
       toast.error("Something went wrong!");
     }
