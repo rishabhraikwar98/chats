@@ -55,7 +55,7 @@ Start the server
 
 ## Related
 
-Here is backend repository
+Backend Repo
 
 [Chats-Backend](https://github.com/rishabhraikwar98/Chats-Backend)
 
