@@ -19,6 +19,7 @@ import {
   Button,
   Menu,
   MenuItem,
+  Stack,
 } from "@mui/material";
 import { MoreVert, Check, Close } from "@mui/icons-material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -52,21 +53,21 @@ const MyFriends = () => {
 
   const handleAccept = async (requestId) => {
     try {
-      await axios.post(BASE_URL+"/api/v1/friends/request/"+requestId)
+      await axios.post(BASE_URL + "/api/v1/friends/request/" + requestId);
       dispatch(fetchMyFriendsThunk(token));
       dispatch(fetchFriendRequestsThunk(token));
     } catch (error) {
-      toast.error("Something went wrong!")
+      toast.error("Something went wrong!");
     }
   };
 
-  const handleDecline = async(requestId) => {
+  const handleDecline = async (requestId) => {
     try {
-      await axios.delete(BASE_URL+"/api/v1/friends/request/"+requestId)
+      await axios.delete(BASE_URL + "/api/v1/friends/request/" + requestId);
       dispatch(fetchMyFriendsThunk(token));
       dispatch(fetchFriendRequestsThunk(token));
     } catch (error) {
-      toast.error("Something went wrong!")
+      toast.error("Something went wrong!");
     }
   };
 
@@ -79,13 +80,13 @@ const MyFriends = () => {
     setAnchorEl(null);
   };
 
-  const handleRemoveFriend = async(friendId) => {
+  const handleRemoveFriend = async (friendId) => {
     try {
-      await axios.patch(BASE_URL+"/api/v1/friends/remove/"+friendId)
+      await axios.patch(BASE_URL + "/api/v1/friends/remove/" + friendId);
       dispatch(fetchMyFriendsThunk(token));
     } catch (error) {
-      toast.error("Something went wrong!")
-    }finally{
+      toast.error("Something went wrong!");
+    } finally {
       setAnchorEl(null);
     }
   };
@@ -121,7 +122,7 @@ const MyFriends = () => {
 
       <Paper elevation={3} sx={{ p: 1 }}>
         {friends.length ? (
-          <List sx={{ overflowY: "auto", maxHeight: 550 }}>
+          <List sx={{ overflowY: "auto", maxHeight: { sm: 550, xs: 695 } }}>
             {friends.map((friend) => (
               <ListItem key={friend._id} sx={{ borderRadius: 1, my: 1 }}>
                 <ListItemAvatar>
@@ -158,7 +159,11 @@ const MyFriends = () => {
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Friend Requests</DialogTitle>
         <DialogContent
-          sx={{ minWidth: 600, maxHeight: 350, overflowY: "auto" }}
+          sx={{
+            minWidth: { sm: 450, xs: 350 },
+            maxHeight: { sm: 450, xs: 500 },
+            overflowY: "auto",
+          }}
         >
           {friendRequests.length > 0 ? (
             <List>
@@ -171,12 +176,14 @@ const MyFriends = () => {
                     />
                   </ListItemAvatar>
                   <ListItemText primary={request.sender.name} />
-                  <IconButton onClick={() => handleAccept(request._id)}>
-                    <Check />
-                  </IconButton>
-                  <IconButton onClick={() => handleDecline(request._id)}>
-                    <Close />
-                  </IconButton>
+                  <Stack sx={{gap:{sm:1.5,xs:0.5}, flexDirection:"row"} }>
+                    <IconButton onClick={() => handleAccept(request._id)}>
+                      <Check />
+                    </IconButton>
+                    <IconButton onClick={() => handleDecline(request._id)}>
+                      <Close />
+                    </IconButton>
+                  </Stack>
                 </ListItem>
               ))}
             </List>

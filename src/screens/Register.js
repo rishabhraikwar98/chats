@@ -42,7 +42,7 @@ function Signup() {
       setLoading(true);
       const body = { name, email, password, confirmPassword };
       const { data } = await registerService(body);
-      login(data.access_token,data.uid);
+      login(data.access_token, data.uid);
       toast.success(data.message);
       setLoading(false);
       navigate("/chats");
@@ -73,7 +73,12 @@ function Signup() {
       <Box sx={{ width: isMobile ? "100%" : "50%" }}>
         {loading ? <LinearProgress /> : ""}
         <Card
-          sx={{ borderRadius: 2, px: { xs: 3, sm: 7 }, py: 4, boxShadow: 3 }}
+          sx={{
+            borderRadius: 2,
+            px: isMobile ? 3 : 5,
+            py: isMobile ? 2 : 4,
+            boxShadow: 3,
+          }}
         >
           <CardContent>
             <Typography
@@ -82,13 +87,14 @@ function Signup() {
             >
               Account Signup
             </Typography>
-            <Stack sx={{ mt: 4 }} gap={4}>
+            <Stack sx={{ mt: 4 }} gap={isMobile ? 3 : 2}>
               <FormControl>
                 <InputLabel sx={{ color: "#555", mb: 1 }}>Full Name</InputLabel>
                 <Input
                   autoFocus
                   fullWidth
                   value={name}
+                  size={isMobile ? "small" : "medium"}
                   onChange={(e) => setName(e.target.value)}
                 />
               </FormControl>
@@ -98,6 +104,7 @@ function Signup() {
                   fullWidth
                   type="email"
                   value={email}
+                  size={isMobile ? "small" : "medium"}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </FormControl>
@@ -107,6 +114,7 @@ function Signup() {
                   fullWidth
                   type={visible ? "text" : "password"}
                   value={password}
+                  size={isMobile ? "small" : "medium"}
                   onChange={(e) => setPassword(e.target.value)}
                   endAdornment={
                     <InputAdornment position="end">
@@ -125,6 +133,7 @@ function Signup() {
                   fullWidth
                   type={confirmPasswordVisible ? "text" : "password"}
                   value={confirmPassword}
+                  size={isMobile ? "small" : "medium"}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   endAdornment={
                     <InputAdornment position="end">
@@ -141,7 +150,7 @@ function Signup() {
               </FormControl>
             </Stack>
             <Button
-              sx={{ borderRadius: 20, px: { xs: 5, sm: 7 }, py: 1.5, mt: 3 }}
+              sx={{ borderRadius: 5, px: { xs: 5 }, py: 1, mt: 3 }}
               variant="contained"
               color="success"
               onClick={handleRegister}

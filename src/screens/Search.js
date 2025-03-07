@@ -90,18 +90,24 @@ const Search = () => {
     }
   };
   return (
-    <Box sx={{ maxWidth: 800, mx: "auto", mt: 4 }}>
-      <Typography variant="h4" gutterBottom sx={{ textAlign: "center" }}>
+    <Box sx={{ maxWidth: 800, mx: "auto", mt: 2 }}>
+      <Typography variant="h4" gutterBottom sx={{ textAlign: "center",mb:{sm:2,xs:4} }}>
         Search People
       </Typography>
-
       <Box display="flex" justifyContent="center" mb={4}>
         <TextField
           placeholder="Search..."
           variant="outlined"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          sx={{ width: "65%" }}
+          sx={{
+            width: {sm:"65%",xs:"90%"},
+            "& .MuiOutlinedInput-root": {
+              "&.Mui-focused fieldset": {
+                border: "solid 1px #1976d2",
+              },
+            },
+          }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -113,7 +119,7 @@ const Search = () => {
       </Box>
       {profiles.length ? (
         <Paper elevation={3} sx={{ p: 2 }}>
-          <List sx={{ maxHeight: 460, overflowY: "auto" }}>
+          <List sx={{ maxHeight: {xs:600,sm:460}, overflowY: "auto" }}>
             {profiles.map((profile) => (
               <ListItem
                 key={profile._id}

@@ -24,7 +24,7 @@ const ChatList = () => {
   useEffect(() => {
     dispatch(fetchChatsThunk(token));
   }, [dispatch]);
-  const onsSelectChat = (chat) => {
+  const onSelectChat = (chat) => {
     dispatch(selectChat(chat));
   };
   const truncateString = (str, maxLength) => {
@@ -42,18 +42,17 @@ const ChatList = () => {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          height="100%"
+          p={15}
         >
-          <CircularProgress />
+          <CircularProgress/>
         </Box>
       ) : chats.length ? (
-        <List>
+        <List sx={{ overflowY: "auto", maxHeight:520}}>
           {chats.map((chat) => (
             <ListItem
               key={chat._id}
-              button
               onClick={() => {
-                onsSelectChat(chat);
+                onSelectChat(chat);
               }}
               selected={selectedChat === chat._id}
               sx={{ borderRadius: 1, mb: 1 }}
@@ -64,7 +63,9 @@ const ChatList = () => {
                   alt={chat.chatDetail.name}
                 />
               </ListItemAvatar>
+              <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
               <ListItemText
+              sx={{minWidth:"60%"}}
                 primary={chat.chatDetail.name}
                 secondary={
                   chat.lastMessage?.from == uid
@@ -73,13 +74,14 @@ const ChatList = () => {
                 }
               />
               <ListItemText
-                sx={{ mr: -2 }}
+                sx={{ maxWidth:"40%", wordSpacing:"0.5" }}
                 secondary={
                   <Typography variant="caption">
                     {FormatTimeStamp(chat.lastMessage?.createdAt)}
                   </Typography>
                 }
               />
+              </Box>
             </ListItem>
           ))}
         </List>
@@ -89,6 +91,7 @@ const ChatList = () => {
           justifyContent="center"
           alignItems="center"
           height="100%"
+          mt={20}
         >
           <Typography variant="body1" color="textSecondary">
             No chats available

@@ -29,27 +29,27 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
-  const [loading,setLoading ] = useState(false)
+  const [loading, setLoading] = useState(false);
   const isMobile = useMediaQuery("(max-width: 600px)"); // Adjust breakpoint as needed
 
   useEffect(() => {
     if (token) {
       navigate("/chats");
     }
-  }, [token,navigate]);
+  }, [token, navigate]);
   const handleLogin = async () => {
     try {
       setLoading(true);
       const body = { email, password };
-      const {data} = await loginService(body);
-      login(data.access_token,data.uid);
-      toast.success(data.message)
+      const { data } = await loginService(body);
+      login(data.access_token, data.uid);
+      toast.success(data.message);
       setLoading(false);
       navigate("/chats");
     } catch (error) {
-      toast.error(error.response.data.message)
-    }finally{
-      setLoading(false)
+      toast.error(error.response.data.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,9 +67,14 @@ function Login() {
       }}
     >
       <Box sx={{ width: isMobile ? "100%" : "50%" }}>
-      {loading?<LinearProgress/>:""}
+        {loading ? <LinearProgress /> : ""}
         <Card
-          sx={{ borderRadius: 2, px: { xs: 3, sm: 7 }, py: 4, boxShadow: 3 }}
+          sx={{
+            borderRadius: 2,
+            px: isMobile ? 3 : 5,
+            py: isMobile ? 2 : 4,
+            boxShadow: 3,
+          }}
         >
           <CardContent>
             <Typography
@@ -78,7 +83,7 @@ function Login() {
             >
               Account Login
             </Typography>
-            <Stack sx={{ mt: 4 }} gap={4}>
+            <Stack sx={{ mt: 4 }} gap={isMobile ? 1 : 2}>
               <FormControl>
                 <FormLabel sx={{ color: "#555", mb: 1 }}>Email</FormLabel>
                 <TextField
@@ -87,6 +92,7 @@ function Login() {
                   fullWidth
                   type="email"
                   value={email}
+                  size={isMobile ? "small" : "medium"}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </FormControl>
@@ -95,6 +101,8 @@ function Login() {
                 <TextField
                   fullWidth
                   value={password}
+                  size={isMobile ? "small" : "medium"}
+                  required
                   onChange={(e) => setPassword(e.target.value)}
                   type={visible ? "text" : "password"}
                   InputProps={{
@@ -132,7 +140,7 @@ function Login() {
               </Grid>
             </Grid>
             <Button
-              sx={{ borderRadius: 20, px: { xs: 5, sm: 7 }, py: 1.5, mt: 2 }}
+              sx={{ borderRadius:5, px: { xs: 5 }, py: 1, mt: 1 }}
               variant="contained"
               color="success"
               disabled={loading}

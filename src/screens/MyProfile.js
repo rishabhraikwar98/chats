@@ -12,6 +12,7 @@ import {
   FormLabel,
   Typography,
   Divider,
+  useMediaQuery,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
@@ -19,9 +20,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import { UploadImage } from "../utils/UploadImage";
 import toast from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  fetchMyProfileThunk,
-} from "../features/activeUser/activeUserSlice";
+import { fetchMyProfileThunk } from "../features/activeUser/activeUserSlice";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -37,18 +36,20 @@ function MyProfile() {
   const [about, setAbout] = useState(activeUser?.about || "");
   const [email, setEmail] = useState(activeUser?.email || "");
   const [isEditing, setIsEditing] = useState({ name: false, about: false });
-  const loading = useSelector(state=>state.activeUser.loading);
+  const loading = useSelector((state) => state.activeUser.loading);
+  const isMobile = useMediaQuery("(max-width: 600px)");
 
-  useEffect(()=>{
-    axios.defaults.headers.common["Authorization"] ="Bearer " +token
-    dispatch(fetchMyProfileThunk(token))
-  },[])
+  useEffect(() => {
+    axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+    dispatch(fetchMyProfileThunk(token));
+  }, [dispatch, token]);
+
   const updateMyProfile = async (body) => {
     try {
-      await axios.patch(BASE_URL + "/api/v1/profile/my_profile", body,{
-        headers:{
-          "Content-Type":"application/json"
-        }
+      await axios.patch(BASE_URL + "/api/v1/profile/my_profile", body, {
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
     } catch (error) {
       toast.error("Something went wrong!");
@@ -87,7 +88,7 @@ function MyProfile() {
 
   const handleSave = async (field) => {
     setIsEditing((prev) => ({ ...prev, [field]: false }));
-    //validation
+    // validation
     if (field === "name" && name.trim().length < 3) {
       toast.error("Name must be at least 3 characters long!");
       setName(activeUser.name);
@@ -101,9 +102,7 @@ function MyProfile() {
     try {
       await updateMyProfile({ [field]: field === "name" ? name : about });
       toast.success(
-        `${
-          field.charAt(0).toUpperCase() + field.slice(1)
-        } updated successfully!`
+        `${field.charAt(0).toUpperCase() + field.slice(1)} updated successfully!`
       );
     } catch (error) {
       toast.error(`Could not update ${field}!`);
@@ -124,9 +123,16 @@ function MyProfile() {
   }
 
   return (
-    <Box display="flex" justifyContent="center" sx={{ mt: 2 }}>
+    <Box display="flex" justifyContent="center" sx={{ px: { xs: 0.5, sm: 3 } }}>
       <Card
-        sx={{ minWidth: "50vw", boxShadow: 2, borderRadius: 2, px: 4, py: 2 }}
+        sx={{
+          width: isMobile ? "100%" : "50vw",
+          boxShadow: 2,
+          borderRadius: 2,
+          px: { xs: 1.5, sm: 4 },
+          py: { xs: 0, sm:2},
+          mt: { xs: 15, sm: 5 },
+        }}
       >
         <CardHeader sx={{ textAlign: "center" }} title="My Profile" />
         <CardContent>
@@ -161,7 +167,7 @@ function MyProfile() {
               onChange={handleAvatarChange}
             />
           </Box>
-          <Stack sx={{ px: 5, py: 3 }} gap={4}>
+          <Stack sx={{ px: { xs: 0,sm:5}, py: 3 }} gap={2.5}>
             <FormControl>
               <FormLabel sx={{ mb: 1 }}>Name</FormLabel>
               {isEditing.name ? (
@@ -170,6 +176,7 @@ function MyProfile() {
                     fullWidth
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    size={isMobile ? "small" : "medium"}
                   />
                   <IconButton onClick={() => handleSave("name")} sx={{ ml: 2 }}>
                     <SaveIcon fontSize="small" />
@@ -198,7 +205,8 @@ function MyProfile() {
                     value={about}
                     onChange={(e) => setAbout(e.target.value)}
                     multiline
-                    rows={5}
+                    rows={isMobile ? 3 : 5}
+                    size={isMobile ? "small" : "medium"}
                   />
                   <IconButton
                     onClick={() => handleSave("about")}

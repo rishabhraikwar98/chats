@@ -119,7 +119,7 @@ const MessagesBox = () => {
             display="flex"
             flexDirection="column"
             flex={1}
-            sx={{ p: 2, pr: 0, overflowY: "auto", maxHeight: 520 }}
+            sx={{ p: 2, overflowY: "auto", maxHeight: 430 }}
           >
             {loadingMessages ? (
               <Box
