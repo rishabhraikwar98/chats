@@ -9,7 +9,6 @@ import {
   Avatar,
   Badge,
   Stack,
-  Chip,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
@@ -30,6 +29,7 @@ const MessagesBox = () => {
   const dispatch = useDispatch();
   const selectedChat = useSelector((state) => state.activeChats.selectedChat);
   const selectedUser = useSelector((state) => state.activeChats.selectedUser);
+  const selectedUserId = selectedUser?._id;
   const messages = useSelector((state) => state.activeChats.messages);
   const loadingMessages = useSelector(
     (state) => state.activeChats.loadingMessages
@@ -50,12 +50,12 @@ const MessagesBox = () => {
         dispatch(fetchChatsThunk(token));
       });
       socket.on("user-typing", (data) => {
-        if (data.chat === selectedChat && data.from === selectedUser._id) {
+        if (data.chat === selectedChat && data.from === selectedUserId) {
           setTypingStatus(true);
         }
       });
       socket.on("user-typing-stopped", (data) => {
-        if (data.chat === selectedChat && data.from === selectedUser._id) {
+        if (data.chat === selectedChat && data.from === selectedUserId) {
           setTypingStatus(false);
         }
       });
@@ -65,7 +65,7 @@ const MessagesBox = () => {
         socket.off("user-typing-stopped");
       };
     }
-  }, [selectedChat]);
+  }, [selectedChat, selectedUserId, dispatch, token]);
 
   const handleSendMessage = () => {
     socket.emit("text-message", {

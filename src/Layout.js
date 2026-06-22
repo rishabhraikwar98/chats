@@ -15,10 +15,12 @@ const Layout = ({ children }) => {
       });
     }
     return () => {
-      socket.off("new-friend-request");
-      socket.disconnect();
+      if (socket) {
+        socket.off("new-friend-request");
+        socket.disconnect();
+      }
     };
-  }, []);
+  }, [uid]);
   return (
     <Box sx={{ display: "flex" }}>
       <Sidebar />

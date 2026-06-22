@@ -43,15 +43,11 @@ const Search = () => {
 
   useEffect(() => {
     if (searchTerm.trim().length) {
-      handleSearch();
+      dispatch(searchProfileThunk({ searchTerm, token }));
     } else {
       dispatch(resetSearchResults());
     }
-  }, [searchTerm]);
-
-  const handleSearch = async () => {
-    dispatch(searchProfileThunk({searchTerm,token}));
-  };
+  }, [searchTerm, dispatch, token]);
   const handleProfileClick = (profileId) => {
     dispatch(viewProfileThunk({profileId,token}));
   };

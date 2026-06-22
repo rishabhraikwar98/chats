@@ -4,7 +4,6 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  Navigate,
 } from "react-router-dom";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import Layout from "./Layout";

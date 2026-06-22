@@ -23,7 +23,7 @@ const ChatList = () => {
   const selectedChat = useSelector((state) => state.activeChats.selectedChat);
   useEffect(() => {
     dispatch(fetchChatsThunk(token));
-  }, [dispatch]);
+  }, [dispatch, token, uid]);
   const onSelectChat = (chat) => {
     dispatch(selectChat(chat));
   };
@@ -68,7 +68,7 @@ const ChatList = () => {
               sx={{minWidth:"60%"}}
                 primary={chat.chatDetail.name}
                 secondary={
-                  chat.lastMessage?.from == uid
+                  chat.lastMessage?.from === uid
                     ? `You: ${truncateString(chat.lastMessage?.content, 12)}`
                     : truncateString(chat.lastMessage?.content, 14)
                 }
