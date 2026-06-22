@@ -10,6 +10,7 @@ import PrivateRoutes from "./utils/PrivateRoutes";
 import Layout from "./Layout";
 import Login from "./screens/Login";
 import Register from "./screens/Register";
+import Home from "./screens/Home";
 import NotFound from "./screens/NotFound";
 import MyProfile from "./screens/MyProfile";
 import Chats from "./screens/Chats";
@@ -24,7 +25,7 @@ function App() {
       <CssBaseline />
       <Router>
         <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route
